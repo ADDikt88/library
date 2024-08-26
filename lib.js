@@ -24,6 +24,8 @@ Book.prototype.createBook = function() {
 
     bookDiv = document.createElement("div")
     bookDiv.setAttribute("class", "book");
+    let bookId = "book_" + this.id;
+    bookDiv.setAttribute("id", bookId)
     
     titleP = document.createElement("p");
     authorP = document.createElement("p");
@@ -38,7 +40,7 @@ Book.prototype.createBook = function() {
     removeButton[this.id] = document.createElement("button");
     removeButton[this.id].setAttribute("class", "removeBtn");
     
-    bookDiv.setAttribute("id", this.title);
+
     bookDiv.appendChild(titleP);
     bookDiv.appendChild(authorP);
     bookDiv.appendChild(pagesP);
@@ -97,6 +99,7 @@ function addBookToLibrary(Book) {
     myLibrary.push(Book);
 }
 
+
 const harryPotter = new Book ("Harry Potter", "JK Rowling", 200, 0, true);
 const lordOfTheRings= new Book ("Lord of the Rings", "JRR Tolkien", 600, 1, true);
 const shootThrees = new Book ("How to Shoot 3s", "Steph Curry", 333, 2, false);
@@ -113,14 +116,6 @@ console.log(myLibrary);
 
 //Loop through array and displays each book on the page
 const libraryContainer = document.querySelector(".library")
-
-function displayBooks () {
-    for (let i = 0; i < myLibrary.length; i++){
-        libraryContainer.appendChild(myLibrary[i].createBook());
-    }
-};
-
-displayBooks();
 
 const addBookBtn = document.querySelector(".add-book");
 const dialog = document.querySelector("#addBookDialog");
@@ -158,6 +153,7 @@ confirmBtn.onclick = function(e) {
         else{
             addBookToLibrary(newBook);
             libraryContainer.appendChild(myLibrary[myLibrary.length - 1].createBook());
+            displayBooks();
             e.preventDefault();
             dialog.close();
         }
@@ -170,4 +166,63 @@ closeDialogBtn.onclick = function() {
 }
 
 //When user clicks read button, it changes it's status
-const readBtn = document.querySelector("#closeDialogBtn");
+let readButtons = document.querySelectorAll(".readStatusBtn");
+//Initialize all buttons
+
+function setRemoveButtonListeners () {
+
+    let removeButtons = document.querySelectorAll(".removeBtn");
+    for (let j = 0; j < myLibrary.length; j++){
+        removeButtons[j].onclick = function() {
+            
+            if (confirm("Are you sure you want to remove " + myLibrary[j].title + "?") == true) {
+                let bookToRemoveID = "#book_" + j;
+                let bookToRemove = document.querySelector(bookToRemoveID);
+                libraryContainer.removeChild(bookToRemove);
+                myLibrary.splice(j,1);
+                libraryContainer.textContent = '';
+                displayBooks();
+            }
+        }
+
+    }
+}
+
+function setReadButtonListeners () {
+
+    let readButton = document.querySelectorAll(".readStatusBtn");
+    for (let j = 0; j < myLibrary.length; j++){
+        readButton[j].onclick = function() {
+            if (readButton[j].textContent == "Read"){
+                readButton[j].textContent = "Unread"
+                readButton[j].style.backgroundColor = "rgb(255, 138, 138)";
+                readButton[j].style.color = "white";
+                readButton[j].style.fontWeight = "bold";
+
+                myLibrary[j].status = false;
+                
+            }
+            else {
+                readButton[j].textContent = "Read"
+                readButton[j].style.backgroundColor = "#478847";
+                readButton[j].style.color = "white";
+                readButton[j].style.fontWeight = "bold";
+
+                myLibrary[j].status = true;
+            }
+            
+        }
+
+    }
+}
+
+
+function displayBooks () {
+    for (let i = 0; i < myLibrary.length; i++){
+        libraryContainer.appendChild(myLibrary[i].createBook());
+    }
+    setRemoveButtonListeners();
+    setReadButtonListeners();
+};
+
+displayBooks();
