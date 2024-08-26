@@ -153,7 +153,8 @@ confirmBtn.onclick = function(e) {
         else{
             addBookToLibrary(newBook);
             libraryContainer.appendChild(myLibrary[myLibrary.length - 1].createBook());
-            displayBooks();
+            setReadButtonListeners();
+            setRemoveButtonListeners();
             e.preventDefault();
             dialog.close();
         }
@@ -167,6 +168,8 @@ closeDialogBtn.onclick = function() {
 
 //When user clicks read button, it changes it's status
 let readButtons = document.querySelectorAll(".readStatusBtn");
+
+
 //Initialize all buttons
 
 function setRemoveButtonListeners () {
@@ -182,10 +185,13 @@ function setRemoveButtonListeners () {
                 myLibrary.splice(j,1);
                 libraryContainer.textContent = '';
                 displayBooks();
+                setReadButtonListeners();
+                setRemoveButtonListeners();
             }
         }
 
     }
+
 }
 
 function setReadButtonListeners () {
@@ -221,8 +227,9 @@ function displayBooks () {
     for (let i = 0; i < myLibrary.length; i++){
         libraryContainer.appendChild(myLibrary[i].createBook());
     }
-    setRemoveButtonListeners();
-    setReadButtonListeners();
 };
 
+
 displayBooks();
+setReadButtonListeners();
+setRemoveButtonListeners();
