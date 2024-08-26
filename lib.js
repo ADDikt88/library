@@ -140,7 +140,7 @@ confirmBtn.onclick = function(e) {
     else
         newBook.status = true;
 
-    newBook.id = myLibrary.length - 1;
+    newBook.id = myLibrary.length;
     
     if (newBook.title.length < 1 | newBook.author.length < 1)
         alert("Please enter all text fields");
@@ -183,6 +183,12 @@ function setRemoveButtonListeners () {
                 let bookToRemove = document.querySelector(bookToRemoveID);
                 libraryContainer.removeChild(bookToRemove);
                 myLibrary.splice(j,1);
+
+                //Re-id all books
+                for (let k = 0; k < myLibrary.length; k++)
+                {
+                    myLibrary[k].id = k;
+                }
                 libraryContainer.textContent = '';
                 displayBooks();
                 setReadButtonListeners();
